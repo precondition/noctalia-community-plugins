@@ -525,7 +525,7 @@ function update()
           data.warned = true
           noctalia.notify(
             noctalia.tr("notify.warn_title"),
-            noctalia.tr("notify.warn_body", { goal = data.goal, time = common.formatShort(data.remainingMs / 1000) })
+            noctalia.tr("notify.warn_body", { goal = data.goal, time = common.formatShort(math.ceil(data.remainingMs / 60000) * 60) })
           )
         end
       end
