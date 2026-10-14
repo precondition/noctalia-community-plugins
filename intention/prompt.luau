@@ -421,13 +421,6 @@ function render()
     }),
   }))
 
-  if #recent > 0 then
-    table.insert(body, ui.row({ gap = 6, align = "center" }, {
-      ui.label({ text = noctalia.tr("prompt.recent"), fontSize = 11, color = "on_surface_variant" }),
-      ui.row({ gap = 4, flexGrow = 1 }, recent),
-    }))
-  end
-
   table.insert(body, ui.column({ gap = 8 }, {
     sectionLabel(noctalia.tr("prompt.duration")),
     ui.row({ gap = 8, align = "center" }, {
@@ -446,6 +439,13 @@ function render()
       ui.row({ gap = 6, flexGrow = 1 }, presets),
     }),
   }))
+
+  if #recent > 0 then
+    table.insert(body, ui.row({ gap = 6, align = "center" }, {
+      ui.label({ text = noctalia.tr("prompt.recent"), fontSize = 11, color = "on_surface_variant" }),
+      ui.row({ gap = 4, flexGrow = 1 }, recent),
+    }))
+  end
 
   local net = networkSection()
   if net then
