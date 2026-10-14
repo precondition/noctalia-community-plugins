@@ -48,6 +48,61 @@ function M.parseDuration(text)
   return math.floor(total)
 end
 
+-- East Asian wide and fullwidth characters, plus emoji.
+local WIDE_RANGES = {
+  { 0x1100, 0x115F }, -- Hangul Jamo
+  { 0x2E80, 0x303E }, -- CJK radicals, symbols and punctuation
+  { 0x3041, 0x33FF }, -- kana, CJK compatibility
+  { 0x3400, 0x4DBF }, -- CJK extension A
+  { 0x4E00, 0x9FFF }, -- CJK unified ideographs
+  { 0xA000, 0xA4CF }, -- Yi
+  { 0xAC00, 0xD7A3 }, -- Hangul syllables
+  { 0xF900, 0xFAFF }, -- CJK compatibility ideographs
+  { 0xFE30, 0xFE4F }, -- CJK compatibility forms
+  { 0xFF00, 0xFF60 }, -- fullwidth forms
+  { 0xFFE0, 0xFFE6 }, -- fullwidth signs
+  { 0x1F300, 0x1FAFF }, -- emoji
+  { 0x20000, 0x3FFFD }, -- CJK extensions B and later
+}
+
+local function charUnits(code)
+  for _, r in ipairs(WIDE_RANGES) do
+    if code >= r[1] and code <= r[2] then
+      return 2
+    end
+  end
+  return 1
+end
+
+-- Rough display width of text in "narrow character" units: wide characters
+-- count double. Labels cannot report their rendered width, so layout
+-- decisions use this estimate.
+function M.textUnits(text)
+  local units = 0
+  for _, code in utf8.codes(text) do
+    units += charUnits(code)
+  end
+  return units
+end
+
+-- Cuts text to at most maxUnits (see textUnits), ending with "…".
+function M.truncateUnits(text, maxUnits)
+  if M.textUnits(text) <= maxUnits then
+    return text
+  end
+  local out = {}
+  local units = 1 -- room for the ellipsis
+  for _, code in utf8.codes(text) do
+    local w = charUnits(code)
+    if units + w > maxUnits then
+      break
+    end
+    units += w
+    table.insert(out, utf8.char(code))
+  end
+  return table.concat(out) .. "…"
+end
+
 function M.formatClock(seconds)
   seconds = math.max(0, math.floor(seconds))
   local h = seconds // 3600

@@ -45,12 +45,14 @@ local COLLAPSED_LINES = 2
 local COLLAPSE_UNITS = 100
 
 local function goalIsLong(text)
-  local units = 0
-  for _, code in utf8.codes(text) do
-    units += (code >= 0x1100) and 2 or 1
-  end
-  return units > COLLAPSE_UNITS
+  return common.textUnits(text) > COLLAPSE_UNITS
 end
+
+-- Recent goals share one row: each chip is cut to CHIP_UNITS, and chips stop
+-- once the row's estimated width is used up. Alt+1..5 still reaches them all.
+local CHIP_UNITS = 28
+local CHIP_ROW_UNITS = 80
+local CHIP_OVERHEAD_UNITS = 4
 
 local function send(cmd)
   cmd.nonce = noctalia.nowMs()
@@ -352,14 +354,20 @@ function render()
   local heading = status == "expired" and noctalia.tr("prompt.heading_next") or noctalia.tr("prompt.heading")
 
   local recent = {}
+  local rowUnits = 0
   for i, goal in ipairs(history) do
     if i > 5 then
       break
     end
+    local text = common.truncateUnits(goal, CHIP_UNITS)
+    rowUnits += common.textUnits(text) + CHIP_OVERHEAD_UNITS
+    if rowUnits > CHIP_ROW_UNITS and #recent > 0 then
+      break
+    end
     table.insert(recent, ui.button({
       key = "recent-" .. i,
-      text = goal,
-      tooltip = "Alt+" .. i,
+      text = text,
+      tooltip = text ~= goal and (goal .. " (Alt+" .. i .. ")") or ("Alt+" .. i),
       controlSize = "sm",
       variant = "ghost",
       onClick = function() useRecent(i) end,
