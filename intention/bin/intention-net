@@ -1,0 +1,151 @@
+#!/bin/sh
+# Network gate for the Intention plugin. Runs as root through pkexec.
+#
+#   intention-net [--dry-run] full
+#   intention-net [--dry-run] offline
+#   intention-net [--dry-run] restricted <domain|ip|cidr>...
+#
+# Only outgoing traffic from the invoking user (PKEXEC_UID) is filtered; system
+# services and other users are untouched. Everything lives in one dedicated
+# nftables table, "inet intention", which is replaced atomically on every call
+# and deleted by "full". Rules are not persisted: a reboot clears them.
+#
+# Manual recovery: sudo nft delete table inet intention
+
+set -eu
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+TABLE="intention"
+
+dry_run=0
+if [ "${1:-}" = "--dry-run" ]; then
+  dry_run=1
+  shift
+fi
+
+mode="${1:-}"
+[ $# -gt 0 ] && shift
+
+uid="${PKEXEC_UID:-$(id -u)}"
+case "$uid" in
+  '' | *[!0-9]*) echo "intention-net: invalid uid" >&2; exit 2 ;;
+esac
+if [ "$uid" = "0" ]; then
+  echo "intention-net: refusing to filter root's traffic" >&2
+  exit 2
+fi
+
+is_ipv4() {
+  printf '%s\n' "$1" | grep -Eq '^([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?$'
+}
+
+is_ipv6() {
+  printf '%s\n' "$1" | grep -Eq '^[0-9a-fA-F:]*:[0-9a-fA-F:]*(/[0-9]{1,3})?$'
+}
+
+is_domain() {
+  printf '%s\n' "$1" | grep -Eq '^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$'
+}
+
+v4=""
+v6=""
+
+add_v4() { v4="$v4${v4:+, }$1"; }
+add_v6() { v6="$v6${v6:+, }$1"; }
+
+resolve() {
+  # The bare name and its www. variant; most sites redirect between the two.
+  for name in "$1" "www.$1"; do
+    for ip in $(getent ahostsv4 "$name" 2>/dev/null | awk '{ print $1 }' | sort -u); do
+      is_ipv4 "$ip" && add_v4 "$ip"
+    done
+    for ip in $(getent ahostsv6 "$name" 2>/dev/null | awk '$1 ~ /:/ && $1 !~ /^::ffff:/ { print $1 }' | sort -u); do
+      is_ipv6 "$ip" && add_v6 "$ip"
+    done
+  done
+}
+
+case "$mode" in
+  full | offline) ;;
+  restricted)
+    for target in "$@"; do
+      if is_ipv4 "$target"; then
+        add_v4 "$target"
+      elif is_ipv6 "$target"; then
+        add_v6 "$target"
+      elif is_domain "$target"; then
+        before="$v4|$v6"
+        resolve "$target"
+        [ "$before" = "$v4|$v6" ] && echo "intention-net: could not resolve $target" >&2
+      else
+        echo "intention-net: rejected invalid target '$target'" >&2
+        exit 2
+      fi
+    done
+    ;;
+  *)
+    echo "usage: intention-net [--dry-run] full|offline|restricted <targets>..." >&2
+    exit 2
+    ;;
+esac
+
+# Declaring the table first makes the delete succeed whether or not it exists,
+# so the whole file applies as one atomic transaction.
+ruleset="table inet $TABLE {}
+delete table inet $TABLE
+"
+
+if [ "$mode" != "full" ]; then
+  sets=""
+  allow=""
+  if [ "$mode" = "restricted" ]; then
+    # DNS stays open so names keep resolving; the address sets decide what is reachable.
+    allow="    udp dport 53 accept
+    tcp dport 53 accept
+"
+    if [ -n "$v4" ]; then
+      sets="$sets  set allow4 {
+    type ipv4_addr
+    flags interval
+    auto-merge
+    elements = { $v4 }
+  }
+"
+      allow="$allow    ip daddr @allow4 accept
+"
+    fi
+    if [ -n "$v6" ]; then
+      sets="$sets  set allow6 {
+    type ipv6_addr
+    flags interval
+    auto-merge
+    elements = { $v6 }
+  }
+"
+      allow="$allow    ip6 daddr @allow6 accept
+"
+    fi
+  fi
+
+  ruleset="$ruleset
+table inet $TABLE {
+$sets  chain output {
+    type filter hook output priority filter; policy accept;
+    meta skuid $uid jump gate
+  }
+
+  chain gate {
+    oifname \"lo\" accept
+$allow    reject
+  }
+}
+"
+fi
+
+if [ "$dry_run" -eq 1 ]; then
+  printf '%s' "$ruleset"
+  exit 0
+fi
+
+printf '%s' "$ruleset" | nft -f -

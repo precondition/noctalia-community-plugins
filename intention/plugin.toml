@@ -1,0 +1,205 @@
+id = "precondition/intention"
+name = "Intention"
+version = "1.0.0"
+plugin_api = 32
+author = "precondition"
+license = "MIT"
+icon = "target-arrow"
+description = "Mindful computer use: state your intention and time box, keep it in the bar, optionally restrict internet."
+tags = ["productivity", "bar", "panel", "service", "network", "time"]
+dependencies = ["pkexec", "nftables"]
+
+# ---- Prompt ----
+
+[[setting]]
+key = "enforce"
+type = "bool"
+label_key = "settings.enforce.label"
+description_key = "settings.enforce.description"
+default = true
+
+[[setting]]
+key = "reopen_delay_seconds"
+type = "int"
+label_key = "settings.reopen_delay_seconds.label"
+description_key = "settings.reopen_delay_seconds.description"
+default = 5
+min = 1
+max = 300
+visible_when = { key = "enforce", values = ["true"] }
+
+[[setting]]
+key = "prompt_on_startup"
+type = "bool"
+label_key = "settings.prompt_on_startup.label"
+description_key = "settings.prompt_on_startup.description"
+default = true
+
+[[setting]]
+key = "default_duration"
+type = "string"
+label_key = "settings.default_duration.label"
+description_key = "settings.default_duration.description"
+default = "25m"
+
+[[setting]]
+key = "quit_action"
+type = "select"
+label_key = "settings.quit_action.label"
+description_key = "settings.quit_action.description"
+default = "lock"
+options = [
+  { value = "lock", label_key = "settings.quit_action.lock" },
+  { value = "suspend", label_key = "settings.quit_action.suspend" },
+  { value = "logout", label_key = "settings.quit_action.logout" },
+  { value = "shutdown", label_key = "settings.quit_action.shutdown" },
+  { value = "none", label_key = "settings.quit_action.none" },
+]
+
+# ---- Timer ----
+
+[[setting]]
+key = "pause_when_idle"
+type = "bool"
+label_key = "settings.pause_when_idle.label"
+description_key = "settings.pause_when_idle.description"
+default = true
+
+[[setting]]
+key = "pause_when_locked"
+type = "bool"
+label_key = "settings.pause_when_locked.label"
+description_key = "settings.pause_when_locked.description"
+default = true
+
+[[setting]]
+key = "warn_minutes"
+type = "int"
+label_key = "settings.warn_minutes.label"
+description_key = "settings.warn_minutes.description"
+default = 2
+min = 0
+max = 60
+
+[[setting]]
+key = "time_format"
+type = "select"
+label_key = "settings.time_format.label"
+description_key = "settings.time_format.description"
+default = "natural"
+options = [
+  { value = "natural", label_key = "settings.time_format.natural" },
+  { value = "clock", label_key = "settings.time_format.clock" },
+]
+
+[[setting]]
+key = "show_seconds"
+type = "bool"
+label_key = "settings.show_seconds.label"
+description_key = "settings.show_seconds.description"
+default = false
+
+[[setting]]
+key = "keep_log"
+type = "bool"
+label_key = "settings.keep_log.label"
+description_key = "settings.keep_log.description"
+default = true
+
+# ---- Network ----
+
+[[setting]]
+key = "network_control"
+type = "bool"
+label_key = "settings.network_control.label"
+description_key = "settings.network_control.description"
+default = true
+
+[[setting]]
+key = "default_network"
+type = "select"
+label_key = "settings.default_network.label"
+description_key = "settings.default_network.description"
+default = "full"
+options = [
+  { value = "full", label_key = "network.full" },
+  { value = "restricted", label_key = "network.restricted" },
+  { value = "offline", label_key = "network.offline" },
+]
+visible_when = { key = "network_control", values = ["true"] }
+
+[[setting]]
+key = "reset_network_on_done"
+type = "bool"
+label_key = "settings.reset_network_on_done.label"
+description_key = "settings.reset_network_on_done.description"
+default = true
+visible_when = { key = "network_control", values = ["true"] }
+
+[[setting]]
+key = "allowlist_dir"
+type = "folder"
+label_key = "settings.allowlist_dir.label"
+description_key = "settings.allowlist_dir.description"
+default = ""
+visible_when = { key = "network_control", values = ["true"] }
+
+[[setting]]
+key = "helper_path"
+type = "file"
+label_key = "settings.helper_path.label"
+description_key = "settings.helper_path.description"
+default = ""
+advanced = true
+visible_when = { key = "network_control", values = ["true"] }
+
+# ---- Entries ----
+
+[[service]]
+id = "service"
+entry = "service.luau"
+
+[[panel]]
+id = "prompt"
+entry = "prompt.luau"
+width = "fill"
+height = "fill"
+placement = "floating"
+position = "center"
+layer = "overlay"
+keyboard_focus = "exclusive"
+dismiss_on_outside_click = false
+capture_keys = ["ctrl+1", "ctrl+2", "ctrl+3", "ctrl+e", "ctrl+q", "alt+1", "alt+2", "alt+3", "alt+4", "alt+5"]
+
+[[widget]]
+id = "bar"
+entry = "bar.luau"
+
+  [[widget.setting]]
+  key = "show_goal"
+  type = "bool"
+  label_key = "settings.show_goal.label"
+  default = true
+
+  [[widget.setting]]
+  key = "show_timer"
+  type = "bool"
+  label_key = "settings.show_timer.label"
+  description_key = "settings.show_timer.description"
+  default = true
+
+  [[widget.setting]]
+  key = "show_network"
+  type = "bool"
+  label_key = "settings.show_network.label"
+  description_key = "settings.show_network.description"
+  default = true
+
+  [[widget.setting]]
+  key = "max_length"
+  type = "int"
+  label_key = "settings.max_length.label"
+  description_key = "settings.max_length.description"
+  default = 40
+  min = 0
+  max = 200

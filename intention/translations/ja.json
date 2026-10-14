@@ -1,0 +1,174 @@
+{
+  "bar": {
+    "expired": "時間切れ",
+    "none": "目的未設定"
+  },
+  "errors": {
+    "auth_cancelled": "認証がキャンセルされました",
+    "empty_allowlist": "制限モードには少なくとも1つのドメインが必要です。許可リストを選ぶか、ドメインを入力してください。",
+    "goal_required": "まず、何をするつもりかを入力してください。",
+    "invalid_duration": "時間「{text}」を読み取れません。25、25m、1h30、1:30 のように入力してください。",
+    "invalid_targets": "有効なドメインまたはアドレスではありません: {list}",
+    "network_failed": "ネットワークアクセスを変更できませんでした: {reason}",
+    "no_pkexec": "pkexec がインストールされていないため、ネットワークアクセスを変更できません。"
+  },
+  "network": {
+    "full": "フルアクセス",
+    "offline": "オフライン",
+    "restricted": "制限付き"
+  },
+  "notify": {
+    "expired_body": "「{goal}」の時間が終わりました。次は何をしますか？",
+    "expired_title": "時間切れ",
+    "title": "Intention",
+    "warn_body": "「{goal}」の残り時間: {time}",
+    "warn_title": "まもなく終了"
+  },
+  "paused": {
+    "idle": "アイドル中は一時停止",
+    "locked": "ロック中は一時停止",
+    "manual": "一時停止中"
+  },
+  "prompt": {
+    "collapse": "折りたたむ",
+    "current_title": "現在の目的",
+    "domains_placeholder": "追加のドメイン（例: wikipedia.org, docs.python.org）",
+    "done": {
+      "lock": "今日はここまで · ロック",
+      "logout": "今日はここまで · ログアウト",
+      "none": "今日はここまで",
+      "shutdown": "今日はここまで · シャットダウン",
+      "suspend": "今日はここまで · サスペンド"
+    },
+    "duration": "どのくらいの時間？",
+    "duration_placeholder": "25m、1h30、空欄 = 無制限",
+    "elapsed": "経過 {time}",
+    "end_early": "早めに終了",
+    "expand": "目的をすべて表示",
+    "expired_detail": "{time} 取り組みました。",
+    "expired_title": "時間切れ",
+    "extend": "{minutes} 分",
+    "goal": "これから…",
+    "goal_placeholder": "例: プロジェクト報告書を書く",
+    "heading": "これから何をしますか？",
+    "heading_next": "次は何をしますか？",
+    "hint": "Enter 開始 · Tab 次の項目 · Ctrl+1/2/3 ネットワーク · Alt+1〜5 最近の目的 · Ctrl+E 5分延長 · Ctrl+Q 終了",
+    "hint_no_network": "Enter 開始 · Tab 次の項目 · Alt+1〜5 最近の目的 · Ctrl+E 5分延長 · Ctrl+Q 終了",
+    "network": "インターネットアクセス",
+    "network_auth": "ネットワークアクセスの変更にはパスワードが必要です。",
+    "network_busy": "認証を待っています…",
+    "network_current": "現在: {mode}",
+    "no_allowlist": "保存済みの許可リストなし",
+    "open_allowlists": "許可リストのフォルダーを開く",
+    "open_ended": "時間制限なし",
+    "pause": "一時停止",
+    "recent": "最近:",
+    "remaining": "残り {time}",
+    "resume": "再開",
+    "start": "開始",
+    "switch": "切り替え"
+  },
+  "settings": {
+    "allowlist_dir": {
+      "description": "許可リストを保存するフォルダー。1リストにつき1つの *.txt ファイルで、1行に1ドメインを書きます。空欄の場合はプラグインのデータフォルダーを使います。",
+      "label": "許可リストのフォルダー"
+    },
+    "default_duration": {
+      "description": "プロンプトにあらかじめ入力される時間（例: 25m、1h）。空欄にすると時間制限なしになります。",
+      "label": "既定の時間"
+    },
+    "default_network": {
+      "description": "前回のセッションがない場合にあらかじめ選択されるインターネットアクセス。",
+      "label": "既定のインターネットアクセス"
+    },
+    "enforce": {
+      "description": "目的が設定されていない間にプロンプトを閉じても、再び表示します。",
+      "label": "目的の入力を求め続ける"
+    },
+    "helper_path": {
+      "description": "pkexec で実行するネットワークヘルパー。空欄の場合はプラグイン同梱のものを使います。より安全にするには root 所有のコピー（例: /usr/local/bin/intention-net）を指定してください。",
+      "label": "ネットワークヘルパーのパス"
+    },
+    "keep_log": {
+      "description": "終了したセッションをプラグインのデータフォルダー内の log.jsonl に記録します。",
+      "label": "セッションの記録を残す"
+    },
+    "max_length": {
+      "description": "目的をこの文字数で切り詰めます。0 にすると全文を表示します。",
+      "label": "目的の最大文字数"
+    },
+    "network_control": {
+      "description": "セッションごとにフル・制限付き・オフラインのインターネットアクセスを選べるようにします。変更時には pkexec でパスワードを求められます。",
+      "label": "インターネットアクセスを制御する"
+    },
+    "pause_when_idle": {
+      "description": "アイドル中はカウントダウンを止めます。README に記載のアイドル設定が必要です。",
+      "label": "アイドル時に一時停止"
+    },
+    "pause_when_locked": {
+      "description": "画面のロック中はカウントダウンを止めます。",
+      "label": "ロック時に一時停止"
+    },
+    "prompt_on_startup": {
+      "description": "シェルの起動時に目的の入力を求めます。",
+      "label": "起動時にプロンプトを表示"
+    },
+    "quit_action": {
+      "description": "「今日はここまで」でセッションを終了した後の動作。",
+      "label": "終了時の動作",
+      "lock": "画面をロック",
+      "logout": "ログアウト",
+      "none": "何もしない",
+      "shutdown": "シャットダウン",
+      "suspend": "ロックしてサスペンド"
+    },
+    "reopen_delay_seconds": {
+      "description": "閉じたプロンプトを再表示するまでの秒数。",
+      "label": "再表示までの時間"
+    },
+    "reset_network_on_done": {
+      "description": "「今日はここまで」で終了したときにフルアクセスに戻します。",
+      "label": "終了時にアクセスを戻す"
+    },
+    "show_goal": {
+      "label": "目的を表示"
+    },
+    "show_network": {
+      "description": "インターネットアクセスが制限中またはオフのときにアイコンを表示します。",
+      "label": "ネットワークモードを表示"
+    },
+    "show_seconds": {
+      "description": "残り時間や経過時間を秒単位で表示します。オフの場合は分単位で表示します。",
+      "label": "秒を表示"
+    },
+    "show_timer": {
+      "description": "カウントダウン、または時間制限なしのセッションでは経過時間を表示します。",
+      "label": "タイマーを表示"
+    },
+    "time_format": {
+      "clock": "時計表記（1:51）",
+      "description": "残り時間や経過時間の表記方法。",
+      "label": "時間の表示形式",
+      "natural": "自然な表記（1時間51分）"
+    },
+    "warn_minutes": {
+      "description": "終了の何分前に通知するか。0 で無効になります。",
+      "label": "終了前に通知"
+    }
+  },
+  "time": {
+    "hours": "{h}時間",
+    "hours_minutes": "{h}時間{m}分",
+    "hours_minutes_seconds": "{h}時間{m}分{s}秒",
+    "minutes": "{m}分",
+    "minutes_seconds": "{m}分{s}秒",
+    "seconds": "{s}秒"
+  },
+  "tooltip": {
+    "elapsed": "経過時間",
+    "goal": "目的",
+    "network": "インターネット",
+    "remaining": "残り時間",
+    "status": "状態"
+  }
+}

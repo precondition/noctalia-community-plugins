@@ -1,0 +1,174 @@
+{
+  "bar": {
+    "expired": "Time's up",
+    "none": "No intention"
+  },
+  "errors": {
+    "auth_cancelled": "authentication was cancelled",
+    "empty_allowlist": "Restricted mode needs at least one domain: pick an allowlist or type some domains.",
+    "goal_required": "State what you intend to do first.",
+    "invalid_duration": "Could not read the duration \"{text}\". Try 25, 25m, 1h30 or 1:30.",
+    "invalid_targets": "Not a valid domain or address: {list}",
+    "network_failed": "Could not change network access: {reason}",
+    "no_pkexec": "pkexec is not installed, so network access cannot be changed."
+  },
+  "network": {
+    "full": "Full access",
+    "offline": "Offline",
+    "restricted": "Restricted"
+  },
+  "notify": {
+    "expired_body": "Your time for \"{goal}\" is over. What's next?",
+    "expired_title": "Time's up",
+    "title": "Intention",
+    "warn_body": "{time} left for \"{goal}\".",
+    "warn_title": "Almost done"
+  },
+  "paused": {
+    "idle": "paused while idle",
+    "locked": "paused while locked",
+    "manual": "paused"
+  },
+  "prompt": {
+    "collapse": "Show less",
+    "current_title": "CURRENT INTENTION",
+    "domains_placeholder": "Extra domains, e.g. wikipedia.org, docs.python.org",
+    "done": {
+      "lock": "Done for now · lock",
+      "logout": "Done for now · log out",
+      "none": "Done for now",
+      "shutdown": "Done for now · shut down",
+      "suspend": "Done for now · suspend"
+    },
+    "duration": "FOR HOW LONG?",
+    "duration_placeholder": "25m, 1h30, empty = no limit",
+    "elapsed": "{time} elapsed",
+    "end_early": "End early",
+    "expand": "Show the full intention",
+    "expired_detail": "You spent {time} on it.",
+    "expired_title": "TIME'S UP",
+    "extend": "{minutes} min",
+    "goal": "I WILL…",
+    "goal_placeholder": "e.g. Write the project report",
+    "heading": "What do you intend to do?",
+    "heading_next": "What's next?",
+    "hint": "Enter start · Tab next field · Ctrl+1/2/3 network · Alt+1–5 recent · Ctrl+E +5 min · Ctrl+Q done",
+    "hint_no_network": "Enter start · Tab next field · Alt+1–5 recent · Ctrl+E +5 min · Ctrl+Q done",
+    "network": "INTERNET ACCESS",
+    "network_auth": "Changing network access asks for your password.",
+    "network_busy": "Waiting for authentication…",
+    "network_current": "Currently: {mode}",
+    "no_allowlist": "No saved allowlist",
+    "open_allowlists": "Open the allowlist folder",
+    "open_ended": "No time limit",
+    "pause": "Pause",
+    "recent": "Recent:",
+    "remaining": "{time} remaining",
+    "resume": "Resume",
+    "start": "Start",
+    "switch": "Switch"
+  },
+  "settings": {
+    "allowlist_dir": {
+      "description": "Folder holding allowlists, one *.txt file per list with one domain per line. Empty uses the plugin's data folder.",
+      "label": "Allowlist folder"
+    },
+    "default_duration": {
+      "description": "Duration prefilled in the prompt, e.g. 25m or 1h. Leave empty for no time limit.",
+      "label": "Default duration"
+    },
+    "default_network": {
+      "description": "Internet access preselected when there is no previous session.",
+      "label": "Default internet access"
+    },
+    "enforce": {
+      "description": "Reopen the prompt whenever it is dismissed while no intention is set.",
+      "label": "Insist on an intention"
+    },
+    "helper_path": {
+      "description": "Network helper run through pkexec. Empty uses the copy bundled with the plugin; point this at a root-owned copy (e.g. /usr/local/bin/intention-net) for a safer setup.",
+      "label": "Network helper path"
+    },
+    "keep_log": {
+      "description": "Append each finished session to log.jsonl in the plugin's data folder.",
+      "label": "Keep a session log"
+    },
+    "max_length": {
+      "description": "Truncate the goal after this many characters. 0 shows it in full.",
+      "label": "Maximum goal length"
+    },
+    "network_control": {
+      "description": "Offer full, restricted, or no internet access per session. Changing it asks for your password through pkexec.",
+      "label": "Control internet access"
+    },
+    "pause_when_idle": {
+      "description": "Stop the countdown while you are idle. Requires the idle hook described in the README.",
+      "label": "Pause when idle"
+    },
+    "pause_when_locked": {
+      "description": "Stop the countdown while the screen is locked.",
+      "label": "Pause when locked"
+    },
+    "prompt_on_startup": {
+      "description": "Ask for an intention when the shell starts.",
+      "label": "Prompt on startup"
+    },
+    "quit_action": {
+      "description": "What \"Done for now\" does after ending the session.",
+      "label": "When done",
+      "lock": "Lock the screen",
+      "logout": "Log out",
+      "none": "Nothing",
+      "shutdown": "Shut down",
+      "suspend": "Lock and suspend"
+    },
+    "reopen_delay_seconds": {
+      "description": "Seconds to wait before showing the prompt again after it was dismissed.",
+      "label": "Reopen delay"
+    },
+    "reset_network_on_done": {
+      "description": "Restore full internet access when you end the day with \"Done for now\".",
+      "label": "Restore access when done"
+    },
+    "show_goal": {
+      "label": "Show the goal"
+    },
+    "show_network": {
+      "description": "Show an icon while internet access is restricted or off.",
+      "label": "Show network mode"
+    },
+    "show_seconds": {
+      "description": "Show the remaining or elapsed time to the second. Off shows whole minutes.",
+      "label": "Show seconds"
+    },
+    "show_timer": {
+      "description": "Show the countdown, or the elapsed time for sessions without a limit.",
+      "label": "Show timer"
+    },
+    "time_format": {
+      "clock": "Clock (1:51)",
+      "description": "How the remaining or elapsed time is written.",
+      "label": "Time format",
+      "natural": "Natural (1h 51m)"
+    },
+    "warn_minutes": {
+      "description": "Send a notification this many minutes before the time is up. 0 disables it.",
+      "label": "Warn before the end"
+    }
+  },
+  "time": {
+    "hours": "{h}h",
+    "hours_minutes": "{h}h {m}m",
+    "hours_minutes_seconds": "{h}h {m}m {s}s",
+    "minutes": "{m}m",
+    "minutes_seconds": "{m}m {s}s",
+    "seconds": "{s}s"
+  },
+  "tooltip": {
+    "elapsed": "Elapsed",
+    "goal": "Intention",
+    "network": "Internet",
+    "remaining": "Remaining",
+    "status": "Status"
+  }
+}
