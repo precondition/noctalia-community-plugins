@@ -22,8 +22,9 @@ internet access for the session: full access, only an allowlist of domains, or n
 ## Usage
 
 1. Enable the plugin. Shortly after the shell starts, the **prompt** fills the screen and asks what you intend to do.
-2. Type your intention, then press `Enter`. The prefilled default duration is used. Press `Tab` to
-   reach the duration and network fields; `Enter` in any field starts the session.
+2. Type your intention, then press `Enter`. The default duration is used. Press `Tab` to
+   reach the duration and network fields; `Enter` in any field starts the session. The duration field
+   starts empty with the default shown as its placeholder, so you can type a different duration right away.
 3. Add the **Intention** bar widget (`precondition/intention:bar`) to see the goal and countdown. Click it to reopen the
    prompt (extend, pause, end early, or switch to something else); right-click it to pause or resume.
 4. When the time is up you get a notification and the prompt comes back. Extend by 5 or 15 minutes, state the next
@@ -51,7 +52,7 @@ noctalia msg panel-toggle precondition/intention:prompt
 | `Ctrl+Q` | Done for now |
 | `Escape` | Hide the prompt |
 
-Durations accept `25` (minutes), `25m`, `1h`, `1h30`, `1:30`, `90s`, or nothing / `∞` for no time limit.
+Durations accept `25` (minutes), `25m`, `1h`, `1h30`, `1:30`, `90s`, or `0` / `∞` for no time limit. An empty duration field uses `default_duration`.
 
 ### Internet access
 
@@ -76,7 +77,7 @@ folder button next to the drop-down opens it.
 | `enforce` | `bool` | `true` | Reopen the prompt whenever it is dismissed while no intention is set. |
 | `reopen_delay_seconds` | `int` | `5` | Seconds before the dismissed prompt comes back. |
 | `prompt_on_startup` | `bool` | `true` | Ask for an intention when the shell starts. |
-| `default_duration` | `string` | `25m` | Duration prefilled in the prompt; empty means no time limit. |
+| `default_duration` | `string` | `25m` | Duration used when the prompt's duration field is left empty; empty means no time limit. |
 | `quit_action` | `select` | `lock` | What **Done for now** does: `lock`, `suspend` (lock and suspend), `logout`, `shutdown`, or `none`. |
 | `pause_when_idle` | `bool` | `true` | Stop the countdown while idle. Needs the idle hook below. |
 | `pause_when_locked` | `bool` | `true` | Stop the countdown while the screen is locked. |

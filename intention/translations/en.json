@@ -41,7 +41,6 @@
       "suspend": "Done for now · suspend"
     },
     "duration": "FOR HOW LONG?",
-    "duration_placeholder": "25m, 1h30, empty = no limit",
     "elapsed": "{time} elapsed",
     "end_early": "End early",
     "expand": "Show the full intention",
@@ -74,7 +73,7 @@
       "label": "Allowlist folder"
     },
     "default_duration": {
-      "description": "Duration prefilled in the prompt, e.g. 25m or 1h. Leave empty for no time limit.",
+      "description": "Duration used when the prompt's duration field is left empty, e.g. 25m or 1h. Leave empty for no time limit.",
       "label": "Default duration"
     },
     "default_network": {

@@ -23,7 +23,9 @@ local defaultDuration = noctalia.getConfig("default_duration") or "25m"
 local defaultNetwork = noctalia.getConfig("default_network") or common.NET_FULL
 
 local goalText = ""
-local durationText = defaultDuration
+-- Empty means the default duration, shown as the placeholder, so typing in the
+-- field replaces it without erasing anything first.
+local durationText = ""
 local netMode = common.NET_FULL
 local allowlists = {}
 local listIndex = 0
@@ -59,6 +61,13 @@ local function send(cmd)
   noctalia.state.set("cmd", cmd)
 end
 
+local function effectiveDuration()
+  if noctalia.string.trim(durationText) == "" then
+    return defaultDuration
+  end
+  return durationText
+end
+
 local function selectedList()
   if listIndex <= 0 then
     return ""
@@ -75,7 +84,7 @@ local function resetForm()
   else
     goalText = ""
   end
-  durationText = defaultDuration
+  durationText = ""
   netMode = prev.mode or defaultNetwork
   if not networkControl then
     netMode = common.NET_FULL
@@ -104,9 +113,9 @@ local function start()
     render()
     return
   end
-  local seconds = common.parseDuration(durationText)
+  local seconds = common.parseDuration(effectiveDuration())
   if not seconds then
-    localError = noctalia.tr("errors.invalid_duration", { text = durationText })
+    localError = noctalia.tr("errors.invalid_duration", { text = effectiveDuration() })
     focusTarget = "duration"
     durationKey += 1
     render()
@@ -374,13 +383,14 @@ function render()
     }))
   end
 
+  local duration = effectiveDuration()
   local presets = {}
   for _, p in ipairs(PRESETS) do
     table.insert(presets, ui.button({
       key = "preset-" .. p,
       text = p,
       controlSize = "sm",
-      variant = durationText == p and "primary" or "outline",
+      variant = duration == p and "primary" or "outline",
       onClick = function() setPreset(p) end,
     }))
   end
@@ -389,8 +399,8 @@ function render()
     text = "∞",
     tooltip = noctalia.tr("prompt.open_ended"),
     controlSize = "sm",
-    variant = (common.parseDuration(durationText) == 0) and "primary" or "outline",
-    onClick = function() setPreset("") end,
+    variant = (common.parseDuration(duration) == 0) and "primary" or "outline",
+    onClick = function() setPreset("∞") end,
   }))
 
   local body = {
@@ -435,7 +445,7 @@ function render()
       ui.input({
         key = "duration-" .. durationKey,
         value = durationText,
-        placeholder = noctalia.tr("prompt.duration_placeholder"),
+        placeholder = defaultDuration ~= "" and defaultDuration or "∞",
         width = 160,
         focus = focusTarget == "duration",
         onChange = function(value) durationText = value end,

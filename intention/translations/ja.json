@@ -41,7 +41,6 @@
       "suspend": "今日はここまで · サスペンド"
     },
     "duration": "どのくらいの時間？",
-    "duration_placeholder": "25m、1h30、空欄 = 無制限",
     "elapsed": "経過 {time}",
     "end_early": "早めに終了",
     "expand": "目的をすべて表示",
@@ -74,7 +73,7 @@
       "label": "許可リストのフォルダー"
     },
     "default_duration": {
-      "description": "プロンプトにあらかじめ入力される時間（例: 25m、1h）。空欄にすると時間制限なしになります。",
+      "description": "プロンプトの時間欄を空のままにしたときに使う時間（例: 25m、1h）。空欄にすると時間制限なしになります。",
       "label": "既定の時間"
     },
     "default_network": {
