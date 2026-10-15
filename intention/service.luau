@@ -189,8 +189,21 @@ local function pausedBy()
   return nil
 end
 
+-- Watchers fire on every set, even when the value is unchanged, so only
+-- publish keys whose encoded value differs from what was last sent.
+local published = {}
+
+local function publishKey(key, value)
+  local encoded = noctalia.json.encode(value)
+  if published[key] == encoded then
+    return
+  end
+  published[key] = encoded
+  noctalia.state.set(key, value)
+end
+
 local function publish()
-  noctalia.state.set("session", {
+  publishKey("session", {
     status = data.status,
     goal = data.goal,
     durationSec = math.floor(data.durationMs / 1000),
@@ -199,16 +212,16 @@ local function publish()
     net = data.net,
     pausedBy = data.status == "active" and pausedBy() or nil,
   })
-  noctalia.state.set("net.applied", data.applied.mode)
-  noctalia.state.set("net.busy", netBusy)
-  noctalia.state.set("history", data.history)
-  noctalia.state.set("error", lastError)
-  noctalia.state.set("enforce", cfg.enforce and not data.enforceSuspended)
+  publishKey("net.applied", data.applied.mode)
+  publishKey("net.busy", netBusy)
+  publishKey("history", data.history)
+  publishKey("error", lastError)
+  publishKey("enforce", cfg.enforce and not data.enforceSuspended)
 end
 
 local function setError(message)
   lastError = message or ""
-  noctalia.state.set("error", lastError)
+  publishKey("error", lastError)
 end
 
 local function openPrompt()
@@ -267,7 +280,7 @@ local function applyNetwork(net, done)
 
   -- The polkit dialog must not end up underneath the overlay prompt.
   netBusy = true
-  noctalia.state.set("net.busy", true)
+  publishKey("net.busy", true)
   closePrompt()
 
   -- The helper is run through /bin/sh so it works even when the exported
