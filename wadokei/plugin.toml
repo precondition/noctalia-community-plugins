@@ -1,0 +1,62 @@
+id = "precondition/wadokei"
+name = "Wadokei"
+version = "1.0.0"
+plugin_api = 34
+author = "precondition"
+license = "MIT"
+icon = "clock"
+description = "The time as a Japanese zodiac hour, like 丑三つ or 正午, on fixed or Edo-style seasonal hours."
+tags = ["bar", "clock", "time", "fun"]
+dependencies = []
+
+[[setting]]
+key = "mode"
+type = "select"
+label_key = "settings.mode.label"
+description_key = "settings.mode.description"
+default = "fixed"
+options = [
+  { value = "fixed", label_key = "settings.mode.fixed" },
+  { value = "temporal", label_key = "settings.mode.temporal" },
+]
+
+[[setting]]
+key = "latitude"
+type = "string"
+label_key = "settings.latitude.label"
+description_key = "settings.latitude.description"
+default = ""
+visible_when = { key = "mode", values = ["temporal"] }
+
+[[setting]]
+key = "longitude"
+type = "string"
+label_key = "settings.longitude.label"
+description_key = "settings.longitude.description"
+default = ""
+visible_when = { key = "mode", values = ["temporal"] }
+
+[[widget]]
+id = "bar"
+entry = "bar.luau"
+
+  [[widget.setting]]
+  key = "format"
+  type = "string"
+  label_key = "settings.format.label"
+  description_key = "settings.format.description"
+  default = "{koku} {quarter}"
+
+  [[widget.setting]]
+  key = "show_special"
+  type = "bool"
+  label_key = "settings.show_special.label"
+  description_key = "settings.show_special.description"
+  default = true
+
+  [[widget.setting]]
+  key = "show_glyph"
+  type = "bool"
+  label_key = "settings.show_glyph.label"
+  description_key = "settings.show_glyph.description"
+  default = true

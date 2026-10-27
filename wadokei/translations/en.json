@@ -1,0 +1,55 @@
+{
+  "animal": {
+    "boar": "Boar",
+    "dog": "Dog",
+    "dragon": "Dragon",
+    "goat": "Goat",
+    "horse": "Horse",
+    "monkey": "Monkey",
+    "ox": "Ox",
+    "rabbit": "Rabbit",
+    "rat": "Rat",
+    "rooster": "Rooster",
+    "snake": "Snake",
+    "tiger": "Tiger"
+  },
+  "settings": {
+    "format": {
+      "description": "Bar text. Tokens: {koku} 丑の刻, {eto} 丑, {quarter} 三つ, {bell} 夜八つ, {animal} Ox",
+      "label": "Format"
+    },
+    "latitude": {
+      "description": "Degrees north. Leave empty to use the shell's location",
+      "label": "Latitude"
+    },
+    "longitude": {
+      "description": "Degrees east. Leave empty to use the shell's location",
+      "label": "Longitude"
+    },
+    "mode": {
+      "description": "Fixed hours are two clock hours each. Seasonal hours split daylight and night into six each, as in the Edo period",
+      "fixed": "Fixed (定時法)",
+      "label": "Hours",
+      "temporal": "Seasonal (不定時法)"
+    },
+    "show_glyph": {
+      "description": "Show a sun by day and a moon by night",
+      "label": "Show icon"
+    },
+    "show_special": {
+      "description": "Show 正午 and 正子 for one minute at noon and midnight instead of the format",
+      "label": "Show 正午 and 正子"
+    }
+  },
+  "tooltip": {
+    "bell": "Bell",
+    "clock": "Clock",
+    "duration": "{hours} h {minutes} min",
+    "hour": "Hour",
+    "hour_of": "Hour of the {animal}",
+    "length": "Hour length",
+    "mode": "Hours",
+    "no_location": "Fixed: no location for seasonal hours",
+    "quarter": "Quarter"
+  }
+}
