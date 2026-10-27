@@ -42,11 +42,11 @@
     }
   },
   "tooltip": {
+    "animal": "Animal",
     "bell": "Bell",
     "clock": "Clock",
-    "duration": "{hours} h {minutes} min",
+    "duration": "{hours}h {minutes}m",
     "hour": "Hour",
-    "hour_of": "Hour of the {animal}",
     "length": "Hour length",
     "mode": "Hours",
     "no_location": "Fixed: no location for seasonal hours",

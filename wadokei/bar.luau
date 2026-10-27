@@ -104,10 +104,9 @@ local function render()
   if r.special then
     table.insert(rows, { noctalia.tr("tooltip.now"), `{r.special}（{r.specialKana}）` })
   end
-  table.insert(rows, {
-    noctalia.tr("tooltip.hour"),
-    `{r.koku}（{r.kokuKana}）· {noctalia.tr("tooltip.hour_of", { animal = animal })}`,
-  })
+  -- The tooltip clips long values, so the animal gets a row of its own.
+  table.insert(rows, { noctalia.tr("tooltip.hour"), `{r.koku}（{r.kokuKana}）` })
+  table.insert(rows, { noctalia.tr("tooltip.animal"), animal })
   table.insert(rows, { noctalia.tr("tooltip.quarter"), `{r.quarterText}（{r.quarterKana}）{r.quarter}/4` })
   table.insert(rows, { noctalia.tr("tooltip.bell"), `{r.bell}（{r.bellKana}）` })
   table.insert(rows, { noctalia.tr("tooltip.clock"), os.date("%H:%M") })
