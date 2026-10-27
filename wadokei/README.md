@@ -10,7 +10,7 @@ can stretch and shrink with the seasons as in the Edo period.
 | Field | Value |
 | --- | --- |
 | ID | `precondition/wadokei` |
-| Entries | Bar widget: `bar` |
+| Entries | Bar widget: `bar`; service: `bell` |
 
 ## Usage
 
@@ -52,6 +52,7 @@ only the order; the clock times move with dawn and dusk.
 | Setting | Type | Default | Description |
 | --- | --- | --- | --- |
 | `mode` | `select` | `fixed` | `fixed` (定時法): every 刻 is two clock hours. `temporal` (不定時法): 明け六つ is dawn and 暮れ六つ is dusk, the daylight and the night are each split into six equal 刻, and each 刻 starts with its bell. Use this for reading Edo-period texts. |
+| `bell` | `select` | `off` | Ring a temple bell (時の鐘) when each 刻's bell would ring. `once`: one stroke. `count`: as many strokes as the hour's name, 九つ down to 四つ, four seconds apart. The `bell` service rings it, so it rings once however many bars show the widget. |
 | `latitude` | `string` | empty | Degrees north for seasonal hours. Empty uses the shell's location. |
 | `longitude` | `string` | empty | Degrees east for seasonal hours. Empty uses the shell's location. |
 | `format` | `string` | `{koku} {quarter}` | Bar text. Tokens: `{koku}` 丑の刻, `{eto}` 丑, `{quarter}` 三つ, `{bell}` 夜八つ, `{animal}` the animal's name. `{eto}{quarter}` gives `丑三つ`, and `{bell} · {koku}` gives `夜八つ · 丑の刻`. |
@@ -75,4 +76,9 @@ the whole plugin.
 - With no location, or where the sun never gets that high or that low (polar
   day and night), seasonal mode falls back to fixed hours and the tooltip says
   so.
+- The bell is `sounds/bell.ogg`, synthesized by `tools/make-bell.py` (additive
+  synthesis, needs numpy and ffmpeg to regenerate). It plays through the
+  shell's sound player at `[audio].sound_volume`; the shell's own sound
+  toggles do not silence it, so set `bell` to `off` for quiet. Real 時の鐘
+  rang three 捨て鐘 before the count; the plugin skips them.
 - The plugin writes no files and spawns no processes.

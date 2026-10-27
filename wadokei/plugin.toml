@@ -36,6 +36,22 @@ description_key = "settings.longitude.description"
 default = ""
 visible_when = { key = "mode", values = ["temporal"] }
 
+[[setting]]
+key = "bell"
+type = "select"
+label_key = "settings.bell.label"
+description_key = "settings.bell.description"
+default = "off"
+options = [
+  { value = "off", label_key = "settings.bell.off" },
+  { value = "once", label_key = "settings.bell.once" },
+  { value = "count", label_key = "settings.bell.count" },
+]
+
+[[service]]
+id = "bell"
+entry = "service.luau"
+
 [[widget]]
 id = "bar"
 entry = "bar.luau"
