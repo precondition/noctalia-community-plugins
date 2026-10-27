@@ -50,6 +50,7 @@
     "length": "Hour length",
     "mode": "Hours",
     "no_location": "Fixed: no location for seasonal hours",
+    "now": "Now",
     "quarter": "Quarter"
   }
 }

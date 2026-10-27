@@ -75,6 +75,16 @@ eq(at(11, 50).untilChange, 10 * 60, "正午 arrives at 12:00")
 eq(at(12, 0, 30).untilChange, 30, "正午 ends at 12:01")
 eq(at(12, 5).untilChange, 25 * 60, "then the next quarter")
 
+eq(at(2, 0).kokuKana, "うしのこく", "koku reading")
+eq(at(2, 0).quarterKana, "みつ", "quarter reading")
+eq(at(2, 0).bellKana, "よるやつ", "bell reading")
+eq(at(18, 0).bellKana, "くれむつ", "暮れ六つ reading")
+eq(at(12, 0).specialKana, "しょうご", "正午 reading")
+eq(at(12, 1).specialKana, nil, "no special reading after 正午")
+for i = 1, 12 do
+  eq(w.ETO_KANA[i] ~= nil and w.BELLS_KANA[i] ~= nil, true, `reading for koku {i}`)
+end
+
 eq(w.format("{koku} {quarter} ({bell}, {animal})", at(2, 0), "Ox"), "丑の刻 三つ (夜八つ, Ox)", "format tokens")
 eq(w.format("{eto}{nope}", at(2, 0)), "丑{nope}", "unknown tokens stay")
 

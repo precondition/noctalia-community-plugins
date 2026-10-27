@@ -19,7 +19,8 @@ moon by night, followed by the current 刻 and quarter, for example `丑の刻 �
 For the minute after noon and midnight it shows `正午` and `正子` instead.
 
 Hover it for the 刻 and its animal, the quarter, the temple bell (時の鐘) for
-that 刻, and the clock time. In seasonal mode the tooltip also shows today's
+that 刻, and the clock time, each with its reading in hiragana, for example
+丑の刻（うしのこく）and 三つ（みつ）. In seasonal mode the tooltip also shows today's
 明け六つ and 暮れ六つ and how long each 刻 lasts right now.
 
 | 刻 | Animal | Fixed hours | Bell |
