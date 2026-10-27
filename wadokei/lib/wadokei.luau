@@ -5,14 +5,18 @@
 -- `luau` CLI.
 --
 -- Every reading is a position `p` on a 12-unit dial that starts at the
--- beginning of 子の刻: koku `floor(p)`, quarter `floor(frac * 4) + 1`. The
--- 正刻 (true moment) of each koku sits at its middle, so 正子 is p = 0.5 and
--- 正午 is p = 6.5, and 明け六つ / 暮れ六つ are p = 3.5 / 9.5.
+-- beginning of 子の刻: koku `floor(p)`, quarter `floor(frac * 4) + 1`. Each
+-- koku's bell (正刻) rings at `bellAt` into it, and 正子 / 正午 are the bells
+-- of 子 and 午.
 --
--- Fixed time (定時法): every koku is two clock hours, 子 = 23:00-01:00.
+-- Fixed time (定時法): every koku is two clock hours, 子 = 23:00-01:00, and
+-- the bell rings in the middle (bellAt = 0.5), so 正午 is 12:00, the start
+-- of 午三つ. This is how the names are used today.
 -- Temporal time (不定時法): 明け六つ is dawn and 暮れ六つ is dusk, the
 -- daylight between them is cut into six equal koku and the night into six
--- more, so the hours stretch and shrink with the seasons as in the Edo period.
+-- more, so the hours stretch and shrink with the seasons. As in the Edo
+-- period, each koku starts with its bell (bellAt = 0), so 明け六つ starts
+-- 卯の刻 and 夜四つ starts 亥の刻.
 
 local M = {}
 
@@ -30,11 +34,11 @@ M.BELLS_KANA = {
 }
 M.QUARTERS_KANA = { "ひとつ", "ふたつ", "みつ", "よつ" }
 
--- Index (0-based) of the koku whose 正刻 gets a name of its own.
+-- Index (0-based) of the koku whose bell gets a name of its own.
 M.SPECIALS = { [0] = "正子", [6] = "正午" }
 M.SPECIALS_KANA = { [0] = "しょうし", [6] = "しょうご" }
 
--- How long after a 正刻 its special name is shown, in seconds.
+-- How long after its bell a special name is shown, in seconds.
 M.SPECIAL_WINDOW = 60
 
 -- Sun altitude at Edo-period 明け六つ / 暮れ六つ: the sky is light enough to
@@ -49,18 +53,19 @@ local function roundMs(seconds)
   return math.floor(seconds * 1000 + 0.5) / 1000
 end
 
--- Builds a reading from a dial position and the number of seconds each koku
--- lasts at that position (only used to say when the reading next changes).
-local function reading(p, secondsPerKoku)
+-- Builds a reading from a dial position, the number of seconds each koku
+-- lasts at that position (only used to say when the reading next changes),
+-- and how far into each koku its bell rings.
+local function reading(p, secondsPerKoku, bellAt)
   p = p % 12
   local index = math.floor(p)
   local frac = p - index
   local quarter = math.min(math.floor(frac * 4) + 1, 4)
   local eto = M.ETO[index + 1]
 
-  -- Seconds since this koku's 正刻 (start of quarter three), rounded to the
-  -- millisecond so float noise cannot move a boundary.
-  local sinceTrue = roundMs((frac - 0.5) * secondsPerKoku)
+  -- Seconds since this koku's bell, rounded to the millisecond so float
+  -- noise cannot move a boundary.
+  local sinceTrue = roundMs((frac - bellAt) * secondsPerKoku)
   local special, specialKana = nil, nil
   if M.SPECIALS[index] and sinceTrue >= 0 and sinceTrue < M.SPECIAL_WINDOW then
     special, specialKana = M.SPECIALS[index], M.SPECIALS_KANA[index]
@@ -90,8 +95,8 @@ local function reading(p, secondsPerKoku)
     bellKana = M.BELLS_KANA[index + 1],
     special = special,
     specialKana = specialKana,
-    -- Daylight runs from 明け六つ (3.5) to 暮れ六つ (9.5).
-    isDay = p >= 3.5 and p < 9.5,
+    -- Daylight runs from the 明け六つ bell to the 暮れ六つ bell.
+    isDay = p >= 3 + bellAt and p < 9 + bellAt,
     untilChange = untilChange,
   }
 end
@@ -101,7 +106,7 @@ function M.fixed(clock)
   local seconds = clock.hour * 3600 + clock.min * 60 + (clock.sec or 0)
   -- 子の刻 starts at 23:00.
   local p = ((seconds + 3600) % 86400) / 7200
-  local r = reading(p, 7200)
+  local r = reading(p, 7200, 0.5)
   r.mode = "fixed"
   return r
 end
@@ -159,7 +164,7 @@ function M.temporal(now, localNoon, lat, lon)
   local p, span, from, to
   if now >= dawn and now < dusk then
     from, to = dawn, dusk
-    p = 3.5 + 6 * (now - dawn) / (dusk - dawn)
+    p = 3 + 6 * (now - dawn) / (dusk - dawn)
   elseif now >= dusk then
     -- The night runs from tonight's dusk to tomorrow's dawn.
     local nextDawn = edges(localNoon + 86400)
@@ -167,7 +172,7 @@ function M.temporal(now, localNoon, lat, lon)
       return nil
     end
     from, to = dusk, nextDawn
-    p = 9.5 + 6 * (now - dusk) / (nextDawn - dusk)
+    p = 9 + 6 * (now - dusk) / (nextDawn - dusk)
   else
     -- Before dawn, the night began at yesterday's dusk.
     local _, prevDusk = edges(localNoon - 86400)
@@ -175,11 +180,11 @@ function M.temporal(now, localNoon, lat, lon)
       return nil
     end
     from, to = prevDusk, dawn
-    p = 9.5 + 6 * (now - prevDusk) / (dawn - prevDusk)
+    p = 9 + 6 * (now - prevDusk) / (dawn - prevDusk)
   end
   span = (to - from) / 6
 
-  local r = reading(p, span)
+  local r = reading(p, span, 0)
   r.mode = "temporal"
   r.dawn = dawn
   r.dusk = dusk

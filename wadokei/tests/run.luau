@@ -109,23 +109,32 @@ eq(w.sunTimes(utc(2026, 12, 21, 11, 0), 80, 18, w.TWILIGHT_ALTITUDE), nil, "pola
 
 local t = w.temporal(dawn, noon, lat, lon)
 eq(t.bell, "明け六つ", "dawn is 明け六つ")
-eq(t.quarter, 3, "dawn is the 正刻 of 卯")
+eq(t.eto, "卯", "dawn is 卯の刻")
+eq(t.quarter, 1, "dawn starts 卯の刻")
 eq(t.isDay, true, "dawn starts the day")
 
 local mid = w.temporal((dawn + dusk) / 2 + 1, noon, lat, lon)
 eq(mid.special, "正午", "halfway through the day is 正午")
+eq(mid.eto .. mid.quarterText, "午一つ", "正午 starts 午の刻")
 
 t = w.temporal(dusk, noon, lat, lon)
 eq(t.bell, "暮れ六つ", "dusk is 暮れ六つ")
+eq(t.eto, "酉", "dusk starts 酉の刻")
 eq(t.isDay, false, "dusk starts the night")
+
+-- Two night koku after 暮れ六つ comes 夜四つ, the start of 亥の刻.
+local yotsu = w.temporal(dusk + 2 * t.secondsPerKoku + 1, noon, lat, lon)
+eq(yotsu.bell, "夜四つ", "two koku after dusk is 夜四つ")
+eq(yotsu.eto .. yotsu.quarterText, "亥一つ", "夜四つ starts 亥の刻")
 
 -- Before dawn, the night is measured from yesterday's dusk.
 local _, prevDusk = w.sunTimes(noon - 86400, lat, lon, w.TWILIGHT_ALTITUDE)
 local midnight = w.temporal((prevDusk + dawn) / 2 + 1, noon, lat, lon)
 eq(midnight.special, "正子", "halfway through last night is 正子")
+eq(midnight.eto .. midnight.quarterText, "子一つ", "正子 starts 子の刻")
 local early = w.temporal(dawn - 60, noon, lat, lon)
-eq(early.eto, "卯", "a minute before dawn is still 卯")
-eq(early.quarter, 2, "in its second quarter")
+eq(early.eto, "寅", "a minute before dawn is still 寅")
+eq(early.quarter, 4, "in its last quarter")
 
 -- After dusk, the night runs to tomorrow's dawn.
 local nextDawn = w.sunTimes(noon + 86400, lat, lon, w.TWILIGHT_ALTITUDE)

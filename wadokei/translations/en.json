@@ -27,7 +27,7 @@
       "label": "Longitude"
     },
     "mode": {
-      "description": "Fixed hours are two clock hours each. Seasonal hours split daylight and night into six each, as in the Edo period",
+      "description": "Fixed hours are two clock hours each. Seasonal hours split daylight and night into six each and start each hour at its bell, as in the Edo period",
       "fixed": "Fixed (定時法)",
       "label": "Hours",
       "temporal": "Seasonal (不定時法)"
