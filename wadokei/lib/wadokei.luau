@@ -21,8 +21,18 @@ M.ANIMALS = { "rat", "ox", "tiger", "rabbit", "dragon", "snake", "horse", "goat"
 M.BELLS = { "夜九つ", "夜八つ", "暁七つ", "明け六つ", "朝五つ", "昼四つ", "昼九つ", "昼八つ", "夕七つ", "暮れ六つ", "宵五つ", "夜四つ" }
 M.QUARTERS = { "一つ", "二つ", "三つ", "四つ" }
 
+-- Hiragana readings, in the same order. Quarters keep the old counting
+-- (みつ, よつ), as in 丑三つ時 (うしみつどき).
+M.ETO_KANA = { "ね", "うし", "とら", "う", "たつ", "み", "うま", "ひつじ", "さる", "とり", "いぬ", "い" }
+M.BELLS_KANA = {
+  "よるここのつ", "よるやつ", "あかつきななつ", "あけむつ", "あさいつつ", "ひるよつ",
+  "ひるここのつ", "ひるやつ", "ゆうななつ", "くれむつ", "よいいつつ", "よるよつ",
+}
+M.QUARTERS_KANA = { "ひとつ", "ふたつ", "みつ", "よつ" }
+
 -- Index (0-based) of the koku whose 正刻 gets a name of its own.
 M.SPECIALS = { [0] = "正子", [6] = "正午" }
+M.SPECIALS_KANA = { [0] = "しょうし", [6] = "しょうご" }
 
 -- How long after a 正刻 its special name is shown, in seconds.
 M.SPECIAL_WINDOW = 60
@@ -51,9 +61,9 @@ local function reading(p, secondsPerKoku)
   -- Seconds since this koku's 正刻 (start of quarter three), rounded to the
   -- millisecond so float noise cannot move a boundary.
   local sinceTrue = roundMs((frac - 0.5) * secondsPerKoku)
-  local special = nil
+  local special, specialKana = nil, nil
   if M.SPECIALS[index] and sinceTrue >= 0 and sinceTrue < M.SPECIAL_WINDOW then
-    special = M.SPECIALS[index]
+    special, specialKana = M.SPECIALS[index], M.SPECIALS_KANA[index]
   end
 
   -- Next boundary: the end of the special window, or the next quarter.
@@ -72,10 +82,14 @@ local function reading(p, secondsPerKoku)
     eto = eto,
     animal = M.ANIMALS[index + 1],
     koku = eto .. "の刻",
+    kokuKana = M.ETO_KANA[index + 1] .. "のこく",
     quarter = quarter,
     quarterText = M.QUARTERS[quarter],
+    quarterKana = M.QUARTERS_KANA[quarter],
     bell = M.BELLS[index + 1],
+    bellKana = M.BELLS_KANA[index + 1],
     special = special,
+    specialKana = specialKana,
     -- Daylight runs from 明け六つ (3.5) to 暮れ六つ (9.5).
     isDay = p >= 3.5 and p < 9.5,
     untilChange = untilChange,

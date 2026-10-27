@@ -100,15 +100,20 @@ local function render()
   local container = barWidget.isVertical() and ui.column or ui.row
   barWidget.render(container({ gap = 6, align = "center" }, children))
 
-  local rows = {
-    { noctalia.tr("tooltip.hour"), `{r.koku} · {noctalia.tr("tooltip.hour_of", { animal = animal })}` },
-    { noctalia.tr("tooltip.quarter"), `{r.quarterText} ({r.quarter}/4)` },
-    { noctalia.tr("tooltip.bell"), r.bell },
-    { noctalia.tr("tooltip.clock"), os.date("%H:%M") },
-  }
+  local rows = {}
+  if r.special then
+    table.insert(rows, { noctalia.tr("tooltip.now"), `{r.special}（{r.specialKana}）` })
+  end
+  table.insert(rows, {
+    noctalia.tr("tooltip.hour"),
+    `{r.koku}（{r.kokuKana}）· {noctalia.tr("tooltip.hour_of", { animal = animal })}`,
+  })
+  table.insert(rows, { noctalia.tr("tooltip.quarter"), `{r.quarterText}（{r.quarterKana}）{r.quarter}/4` })
+  table.insert(rows, { noctalia.tr("tooltip.bell"), `{r.bell}（{r.bellKana}）` })
+  table.insert(rows, { noctalia.tr("tooltip.clock"), os.date("%H:%M") })
   if r.mode == "temporal" then
-    table.insert(rows, { "明け六つ", hhmm(r.dawn) })
-    table.insert(rows, { "暮れ六つ", hhmm(r.dusk) })
+    table.insert(rows, { "明け六つ（あけむつ）", hhmm(r.dawn) })
+    table.insert(rows, { "暮れ六つ（くれむつ）", hhmm(r.dusk) })
     table.insert(rows, { noctalia.tr("tooltip.length"), duration(r.secondsPerKoku) })
   elseif noctalia.getConfig("mode") == "temporal" then
     table.insert(rows, { noctalia.tr("tooltip.mode"), noctalia.tr("tooltip.no_location") })
