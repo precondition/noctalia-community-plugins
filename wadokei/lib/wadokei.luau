@@ -25,6 +25,9 @@ M.ANIMALS = { "rat", "ox", "tiger", "rabbit", "dragon", "snake", "horse", "goat"
 M.BELLS = { "夜九つ", "夜八つ", "暁七つ", "明け六つ", "朝五つ", "昼四つ", "昼九つ", "昼八つ", "夕七つ", "暮れ六つ", "宵五つ", "夜四つ" }
 M.QUARTERS = { "一つ", "二つ", "三つ", "四つ" }
 
+-- How many times each koku's bell is struck: 九つ down to 四つ, twice a day.
+M.BELL_STROKES = { 9, 8, 7, 6, 5, 4, 9, 8, 7, 6, 5, 4 }
+
 -- Hiragana readings, in the same order. Quarters keep the old counting
 -- (みつ, よつ), as in 丑三つ時 (うしみつどき).
 M.ETO_KANA = { "ね", "うし", "とら", "う", "たつ", "み", "うま", "ひつじ", "さる", "とり", "いぬ", "い" }
@@ -93,6 +96,9 @@ local function reading(p, secondsPerKoku, bellAt)
     quarterKana = M.QUARTERS_KANA[quarter],
     bell = M.BELLS[index + 1],
     bellKana = M.BELLS_KANA[index + 1],
+    strokes = M.BELL_STROKES[index + 1],
+    -- Seconds since this koku's bell rang; negative before it rings.
+    sinceBell = sinceTrue,
     special = special,
     specialKana = specialKana,
     -- Daylight runs from the 明け六つ bell to the 暮れ六つ bell.

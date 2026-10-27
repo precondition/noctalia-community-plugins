@@ -14,6 +14,13 @@
     "tiger": "Tiger"
   },
   "settings": {
+    "bell": {
+      "count": "Count the hour (九つ = nine strokes)",
+      "description": "Ring a temple bell when each hour's bell would ring",
+      "label": "Bell",
+      "off": "Off",
+      "once": "One stroke"
+    },
     "format": {
       "description": "Bar text. Tokens: {koku} 丑の刻, {eto} 丑, {quarter} 三つ, {bell} 夜八つ, {animal} Ox",
       "label": "Format"

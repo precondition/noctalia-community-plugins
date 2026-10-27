@@ -69,6 +69,13 @@ eq(at(5, 59).isDay, false, "before 明け六つ is night")
 eq(at(6, 0).isDay, true, "明け六つ starts the day")
 eq(at(18, 0).isDay, false, "暮れ六つ starts the night")
 
+-- Bells.
+eq(at(0, 0).strokes, 9, "九つ at midnight")
+eq(at(6, 0).strokes, 6, "六つ at dawn")
+eq(at(22, 0).strokes, 4, "四つ at night")
+eq(at(12, 0, 30).sinceBell, 30, "bell rang 30 s ago")
+eq(at(11, 30).sinceBell, -1800, "bell rings in 30 min")
+
 -- Next change times.
 eq(at(2, 10).untilChange, 20 * 60, "next quarter at 02:30")
 eq(at(11, 50).untilChange, 10 * 60, "正午 arrives at 12:00")
@@ -126,6 +133,7 @@ eq(t.isDay, false, "dusk starts the night")
 local yotsu = w.temporal(dusk + 2 * t.secondsPerKoku + 1, noon, lat, lon)
 eq(yotsu.bell, "夜四つ", "two koku after dusk is 夜四つ")
 eq(yotsu.eto .. yotsu.quarterText, "亥一つ", "夜四つ starts 亥の刻")
+eq(yotsu.sinceBell, 1, "the 夜四つ bell rang a second ago")
 
 -- Before dawn, the night is measured from yesterday's dusk.
 local _, prevDusk = w.sunTimes(noon - 86400, lat, lon, w.TWILIGHT_ALTITUDE)
