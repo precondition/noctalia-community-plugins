@@ -5,8 +5,11 @@
 -- published "session" table and send commands through "cmd".
 --
 -- State published to the other entries (noctalia.state):
---   session         { status, goal, durationSec, remainingSec, elapsedSec, net, pausedBy }
+--   session         { status, goal, durationSec, remainingSec, elapsedSec, net, pausedBy,
+--                     startedAt, endedAt, plannedEndAt, extendedSec }
 --                   status: "none" | "active" | "expired"
+--                   startedAt/endedAt/plannedEndAt are Unix seconds; endedAt is set
+--                   once the time runs out, plannedEndAt only for timed sessions
 --   net.applied     the network mode currently enforced by the helper
 --   net.busy        true while waiting on pkexec
 --   history         recent goals, newest first
@@ -60,6 +63,11 @@ local data = {
   remainingMs = 0,
   elapsedMs = 0,
   startedAt = 0,
+  -- Wall-clock end of the latest expiry, and the session's first planned length
+  -- and added time, for the summary shown once the time is up.
+  endedAt = 0,
+  plannedMs = 0,
+  extendedMs = 0,
   net = { mode = common.NET_FULL, list = "", domains = "" },
   applied = { mode = common.NET_FULL, signature = common.NET_FULL, bootId = "" },
   history = {},
@@ -209,6 +217,10 @@ local function publish()
     durationSec = math.floor(data.durationMs / 1000),
     remainingSec = math.ceil(data.remainingMs / 1000),
     elapsedSec = math.floor(data.elapsedMs / 1000),
+    startedAt = data.startedAt,
+    endedAt = data.status == "expired" and data.endedAt or nil,
+    plannedEndAt = data.plannedMs > 0 and data.startedAt + data.plannedMs // 1000 or nil,
+    extendedSec = data.extendedMs // 1000,
     net = data.net,
     pausedBy = data.status == "active" and pausedBy() or nil,
   })
@@ -339,6 +351,9 @@ local function startSession(goal, durationSec, net)
     data.remainingMs = durationSec * 1000
     data.elapsedMs = 0
     data.startedAt = os.time()
+    data.endedAt = 0
+    data.plannedMs = durationSec * 1000
+    data.extendedMs = 0
     data.net = net
     data.warned = false
     manualPause = false
@@ -352,9 +367,11 @@ local function startSession(goal, durationSec, net)
   end)
 end
 
-local function expire()
+-- endedAt defaults to now; pass the last tick's time when the machine was away.
+local function expire(endedAt)
   data.status = "expired"
   data.remainingMs = 0
+  data.endedAt = endedAt or os.time()
   save()
   publish()
   noctalia.notify(noctalia.tr("notify.expired_title"), noctalia.tr("notify.expired_body", { goal = data.goal }))
@@ -378,6 +395,7 @@ local function extend(minutes)
   end
   data.durationMs += ms
   data.remainingMs += ms
+  data.extendedMs += ms
   data.warned = false
   setError("")
   save()
@@ -519,7 +537,7 @@ function update()
 
   if data.status == "active" and dt > STALE_MS then
     -- Back after a long suspend: the old intention no longer applies.
-    expire()
+    expire(os.time() - dt // 1000)
     return
   end
 

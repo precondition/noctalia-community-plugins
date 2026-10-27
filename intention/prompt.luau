@@ -213,6 +213,38 @@ local function goalLabel(goal)
   })
 end
 
+local function clockTime(unixSeconds)
+  return noctalia.formatTime(noctalia.timeFormat(), unixSeconds)
+end
+
+-- "12:50 – 14:02 · planned until 13:30, +30m · 1h 5m focused": the wall-clock
+-- span, then any added time, then the time counted when pauses shortened it.
+local function expiredSummary()
+  local startedAt = session.startedAt or 0
+  local endedAt = session.endedAt or 0
+  local elapsedSec = session.elapsedSec or 0
+  if startedAt <= 0 or endedAt < startedAt then
+    -- Saved by a version that did not record the times.
+    return noctalia.tr("prompt.expired_detail", { time = common.formatShort(elapsedSec) })
+  end
+  local parts = { noctalia.tr("prompt.expired_span", { from = clockTime(startedAt), to = clockTime(endedAt) }) }
+  local extendedSec = session.extendedSec or 0
+  if extendedSec > 0 then
+    if session.plannedEndAt then
+      table.insert(parts, noctalia.tr("prompt.expired_planned", {
+        time = clockTime(session.plannedEndAt),
+        extra = common.formatShort(extendedSec),
+      }))
+    else
+      table.insert(parts, noctalia.tr("prompt.expired_extended", { extra = common.formatShort(extendedSec) }))
+    end
+  end
+  if (endedAt - startedAt) - elapsedSec >= 60 then
+    table.insert(parts, noctalia.tr("prompt.expired_focused", { time = common.formatShort(elapsedSec) }))
+  end
+  return table.concat(parts, " · ")
+end
+
 local function sessionCard()
   local status = session.status
   if status ~= "active" and status ~= "expired" then
@@ -223,7 +255,7 @@ local function sessionCard()
   local detail
   if status == "expired" then
     title = noctalia.tr("prompt.expired_title")
-    detail = noctalia.tr("prompt.expired_detail", { time = common.formatShort(session.elapsedSec or 0) })
+    detail = expiredSummary()
   else
     title = noctalia.tr("prompt.current_title")
     if (session.durationSec or 0) > 0 then
