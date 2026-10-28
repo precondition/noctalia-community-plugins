@@ -1,0 +1,63 @@
+{
+  "animal": {
+    "boar": "猪",
+    "dog": "犬",
+    "dragon": "竜",
+    "goat": "羊",
+    "horse": "馬",
+    "monkey": "猿",
+    "ox": "牛",
+    "rabbit": "兎",
+    "rat": "鼠",
+    "rooster": "鶏",
+    "snake": "蛇",
+    "tiger": "虎"
+  },
+  "settings": {
+    "bell": {
+      "count": "刻の数だけ撞く（九つ＝九打）",
+      "description": "各刻の時の鐘が鳴るときに梵鐘の音を鳴らす",
+      "label": "鐘",
+      "off": "鳴らさない",
+      "once": "一打"
+    },
+    "format": {
+      "description": "バーの表示。トークン：{koku} 丑の刻、{eto} 丑、{quarter} 三つ、{bell} 夜八つ、{animal} 牛",
+      "label": "書式"
+    },
+    "latitude": {
+      "description": "北緯（度）。空欄の場合はシェルの位置情報を使用",
+      "label": "緯度"
+    },
+    "longitude": {
+      "description": "東経（度）。空欄の場合はシェルの位置情報を使用",
+      "label": "経度"
+    },
+    "mode": {
+      "description": "定時法では一刻を常に二時間とする。不定時法では江戸時代と同じく昼と夜をそれぞれ六つに分け、各刻を時の鐘から始める",
+      "fixed": "定時法",
+      "label": "時法",
+      "temporal": "不定時法"
+    },
+    "show_glyph": {
+      "description": "昼は太陽、夜は月のアイコンを表示",
+      "label": "アイコンを表示"
+    },
+    "show_special": {
+      "description": "正午と正子の一分間、書式の代わりに「正午」「正子」と表示",
+      "label": "正午と正子を表示"
+    }
+  },
+  "tooltip": {
+    "animal": "動物",
+    "bell": "鐘",
+    "clock": "時計",
+    "duration": "{hours}時間{minutes}分",
+    "hour": "刻",
+    "length": "一刻の長さ",
+    "mode": "時法",
+    "no_location": "定時法（位置情報がないため不定時法は使用不可）",
+    "now": "現在",
+    "quarter": "四半刻"
+  }
+}
