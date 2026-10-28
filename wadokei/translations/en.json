@@ -13,6 +13,20 @@
     "snake": "Snake",
     "tiger": "Tiger"
   },
+  "animal_tooltip": {
+    "boar": "Boar",
+    "dog": "Dog",
+    "dragon": "Dragon",
+    "goat": "Goat",
+    "horse": "Horse",
+    "monkey": "Monkey",
+    "ox": "Ox",
+    "rabbit": "Rabbit",
+    "rat": "Rat",
+    "rooster": "Rooster",
+    "snake": "Snake",
+    "tiger": "Tiger"
+  },
   "settings": {
     "bell": {
       "count": "Count the hour (九つ = nine strokes)",

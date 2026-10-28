@@ -44,7 +44,7 @@ local function render()
   end
   -- The tooltip clips long values, so the animal gets a row of its own.
   table.insert(rows, { noctalia.tr("tooltip.hour"), `{r.koku}（{r.kokuKana}）` })
-  table.insert(rows, { noctalia.tr("tooltip.animal"), animal })
+  table.insert(rows, { noctalia.tr("tooltip.animal"), noctalia.tr("animal_tooltip." .. r.animal) })
   table.insert(rows, { noctalia.tr("tooltip.quarter"), `{r.quarterText}（{r.quarterKana}）{r.quarter}/4` })
   table.insert(rows, { noctalia.tr("tooltip.bell"), `{r.bell}（{r.bellKana}）` })
   table.insert(rows, { noctalia.tr("tooltip.clock"), os.date("%H:%M") })

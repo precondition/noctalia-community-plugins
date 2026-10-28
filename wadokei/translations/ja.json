@@ -13,6 +13,20 @@
     "snake": "蛇",
     "tiger": "虎"
   },
+  "animal_tooltip": {
+    "boar": "猪（いのしし）",
+    "dog": "犬（いぬ）",
+    "dragon": "竜（りゅう）",
+    "goat": "羊（ひつじ）",
+    "horse": "馬（うま）",
+    "monkey": "猿（さる）",
+    "ox": "牛（うし）",
+    "rabbit": "兎（うさぎ）",
+    "rat": "鼠（ねずみ）",
+    "rooster": "鶏（にわとり）",
+    "snake": "蛇（へび）",
+    "tiger": "虎（とら）"
+  },
   "settings": {
     "bell": {
       "count": "刻の数だけ撞く（九つ＝九打）",
