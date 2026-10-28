@@ -54,7 +54,7 @@
     "clock": "Clock",
     "duration": "{hours}h {minutes}m",
     "hour": "Hour",
-    "length": "Hour length",
+    "length": "Koku length",
     "mode": "Hours",
     "no_location": "Fixed: no location for seasonal hours",
     "now": "Now",
