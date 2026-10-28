@@ -290,6 +290,7 @@ local function sessionCard()
   end
 
   return ui.column({
+    key = "session",
     gap = 8,
     padding = 14,
     radius = 12,
@@ -382,7 +383,7 @@ local function networkSection()
   end
   table.insert(children, ui.label({ text = note, fontSize = 11, color = "on_surface_variant" }))
 
-  return ui.column({ gap = 8 }, children)
+  return ui.column({ key = "network", gap = 8 }, children)
 end
 
 function render()
@@ -436,7 +437,7 @@ function render()
   }))
 
   local body = {
-    ui.row({ gap = 12, align = "center" }, {
+    ui.row({ key = "heading", gap = 12, align = "center" }, {
       ui.glyph({ name = "target-arrow", size = 30, color = "primary" }),
       ui.label({ text = heading, fontSize = 26, fontWeight = "bold", flexGrow = 1 }),
     }),
@@ -448,13 +449,13 @@ function render()
   end
 
   if message ~= "" then
-    table.insert(body, ui.row({ gap = 8, align = "center", padding = 10, radius = 8, fill = "error/0.15" }, {
+    table.insert(body, ui.row({ key = "error", gap = 8, align = "center", padding = 10, radius = 8, fill = "error/0.15" }, {
       ui.glyph({ name = "alert-triangle", size = 16, color = "error" }),
       ui.label({ text = message, color = "error", flexGrow = 1, maxLines = 4 }),
     }))
   end
 
-  table.insert(body, ui.column({ gap = 8 }, {
+  table.insert(body, ui.column({ key = "goal", gap = 8 }, {
     sectionLabel(noctalia.tr("prompt.goal")),
     ui.input({
       key = "goal-" .. goalKey,
@@ -471,7 +472,7 @@ function render()
     }),
   }))
 
-  table.insert(body, ui.column({ gap = 8 }, {
+  table.insert(body, ui.column({ key = "duration", gap = 8 }, {
     sectionLabel(noctalia.tr("prompt.duration")),
     ui.row({ gap = 8, align = "center" }, {
       ui.input({
@@ -491,7 +492,7 @@ function render()
   }))
 
   if #recent > 0 then
-    table.insert(body, ui.row({ gap = 6, align = "center" }, {
+    table.insert(body, ui.row({ key = "recent", gap = 6, align = "center" }, {
       ui.label({ text = noctalia.tr("prompt.recent"), fontSize = 11, color = "on_surface_variant" }),
       ui.row({ gap = 4, flexGrow = 1 }, recent),
     }))
@@ -502,7 +503,7 @@ function render()
     table.insert(body, net)
   end
 
-  table.insert(body, ui.row({ gap = 8, align = "center" }, {
+  table.insert(body, ui.row({ key = "actions", gap = 8, align = "center" }, {
     ui.button({
       text = noctalia.tr("prompt.done." .. (noctalia.getConfig("quit_action") or "lock")),
       glyph = "logout",
@@ -522,6 +523,7 @@ function render()
   }))
 
   table.insert(body, ui.label({
+    key = "hint",
     text = noctalia.tr(networkControl and "prompt.hint" or "prompt.hint_no_network"),
     fontSize = 11,
     color = "on_surface_variant",
