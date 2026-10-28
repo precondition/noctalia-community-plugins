@@ -10,10 +10,24 @@ M.NET_FULL = "full"
 M.NET_RESTRICTED = "restricted"
 M.NET_OFFLINE = "offline"
 
+-- Full-width ASCII (２５ｍ, １：３０) and the ideographic space -> their
+-- half-width forms, so durations typed with a Japanese IME still parse.
+function M.toHalfWidth(text)
+  return (string.gsub(text, utf8.charpattern, function(c)
+    local cp = utf8.codepoint(c)
+    if cp >= 0xFF01 and cp <= 0xFF5E then
+      return string.char(cp - 0xFEE0)
+    elseif cp == 0x3000 then
+      return " "
+    end
+    return nil
+  end))
+end
+
 -- "25", "25m", "1h", "1h30", "1h30m", "90s", "1:30" -> seconds.
 -- Empty or "0" -> 0 (open-ended). nil when the text cannot be parsed.
 function M.parseDuration(text)
-  local s = string.lower(noctalia.string.trim(text or ""))
+  local s = string.lower(noctalia.string.trim(M.toHalfWidth(text or "")))
   if s == "" or s == "0" or s == "-" or s == "∞" then
     return 0
   end

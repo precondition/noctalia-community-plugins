@@ -62,7 +62,7 @@ local function send(cmd)
 end
 
 local function effectiveDuration()
-  if noctalia.string.trim(durationText) == "" then
+  if noctalia.string.trim(common.toHalfWidth(durationText)) == "" then
     return defaultDuration
   end
   return durationText
@@ -428,7 +428,7 @@ function render()
       key = "preset-" .. p,
       text = p,
       controlSize = "sm",
-      variant = duration == p and "primary" or "outline",
+      variant = common.toHalfWidth(duration) == p and "primary" or "outline",
       onClick = function() setPreset(p) end,
     }))
   end
