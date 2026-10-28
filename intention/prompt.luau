@@ -217,8 +217,9 @@ local function clockTime(unixSeconds)
   return noctalia.formatTime(noctalia.timeFormat(), unixSeconds)
 end
 
--- "12:50 – 14:02 · planned until 13:30, +30m · 1h 5m focused": the wall-clock
--- span, then any added time, then the time counted when pauses shortened it.
+-- "12:50 – 14:02 (1h 12m) · planned until 13:30, +30m · 1h 5m focused": the
+-- wall-clock span and its length, then any added time, then the time counted
+-- when pauses shortened it.
 local function expiredSummary()
   local startedAt = session.startedAt or 0
   local endedAt = session.endedAt or 0
@@ -227,7 +228,11 @@ local function expiredSummary()
     -- Saved by a version that did not record the times.
     return noctalia.tr("prompt.expired_detail", { time = common.formatShort(elapsedSec) })
   end
-  local parts = { noctalia.tr("prompt.expired_span", { from = clockTime(startedAt), to = clockTime(endedAt) }) }
+  local parts = { noctalia.tr("prompt.expired_span", {
+    from = clockTime(startedAt),
+    to = clockTime(endedAt),
+    total = common.formatShort(endedAt - startedAt),
+  }) }
   local extendedSec = session.extendedSec or 0
   if extendedSec > 0 then
     if session.plannedEndAt then
